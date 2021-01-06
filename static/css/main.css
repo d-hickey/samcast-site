@@ -1,0 +1,50 @@
+body {
+    background: url('/media/samlogo.jpg');
+    margin: 0 auto;
+    text-align: center;
+    width: 1300px;
+}
+
+#content, #nav{
+    background-color: white;
+    border-radius: 20px;
+    margin: 0 auto;
+    margin-left:20%;
+    margin-top: 10px;
+    text-align: center;
+    width: 780px;
+}
+
+#content{
+    padding: 10px;
+}
+
+#nav{
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.navbar{
+    margin: 0 auto;
+    text-align:center;
+}
+
+td {
+    padding-bottom: 20px;
+}
+
+.date {
+    font-style: italic;
+}
+
+#peopletable {
+    width: 700px;
+    margin: 0 auto;
+    text-align:center;
+}
+
+#peopletable td{
+    width:33%;
+    padding: 5px;
+}
