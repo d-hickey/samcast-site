@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Nav from "@/components/Nav";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   // metadataBase is used to resolve relative OpenGraph image URLs
@@ -27,8 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Nav />
-        <main className="card mt-2.5 p-2.5">{children}</main>
+        <SiteHeader />
+        <main className="max-w-4xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   );
