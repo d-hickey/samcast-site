@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { episodes, getEpisode } from "@/lib/episodes";
 import { notFound } from "next/navigation";
+import ParticipantImage from "@/components/ParticipantImage";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -35,24 +35,29 @@ export default async function EpisodePage({ params }: Props) {
   if (!ep) notFound();
 
   return (
-    <div className="py-12 flex flex-col items-center gap-6">
-      {/* ── Audio player ──────────────────────────────────────── */}
+    <div className="flex flex-col items-center gap-8">
+      {/* ── Episode heading ────────────────────────────────────── */}
+      <div className="w-full text-center">
+        <h1 className="text-2xl font-bold text-gray-900">{ep.title}</h1>
+        <p className="text-sm italic text-gray-500 mt-1">{ep.date}</p>
+        <p className="text-gray-700 mt-2">{ep.description}</p>
+      </div>
+
+      {/* ── Audio player ────────────────────────────────────────── */}
       {ep.audioFiles && (
-        <div>
+        <div className="w-full flex flex-col items-center gap-2">
           {ep.soundcloudUrl && (
-            <p className="mb-2">
-              <a
-                href={ep.soundcloudUrl}
-                className="text-blue-700 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                SoundCloud Link
-              </a>
-            </p>
+            <a
+              href={ep.soundcloudUrl}
+              className="text-blue-700 hover:underline text-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              SoundCloud Link
+            </a>
           )}
           {/* Audio clips have no captions. */}
-          <audio controls>
+          <audio controls className="w-full max-w-lg">
             {ep.audioFiles.map((f) => (
               <source key={f.src} src={f.src} type={f.type} />
             ))}
@@ -62,48 +67,43 @@ export default async function EpisodePage({ params }: Props) {
         </div>
       )}
 
-      {/* ── YouTube embed ─────────────────────────────────────── */}
+      {/* ── YouTube embed (responsive 16:9) ─────────────────────── */}
       {ep.youtubeId && (
-        <iframe
-          width="560"
-          height="315"
-          src={`https://www.youtube.com/embed/${ep.youtubeId}`}
-          title="YouTube video player"
-          frameBorder="0"
-          allow={
-            ep.youtubeAllow ??
-            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          }
-          allowFullScreen
-        />
+        <div className="video-wrapper w-full">
+          <iframe
+            src={`https://www.youtube.com/embed/${ep.youtubeId}`}
+            title="YouTube video player"
+            allow={
+              ep.youtubeAllow ??
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            }
+            allowFullScreen
+          />
+        </div>
       )}
 
-      {/* ── Participant portraits ──────────────────────────────── */}
-      <div className="flex flex-wrap justify-center gap-2">
+      {/* ── Participant portraits ────────────────────────────────── */}
+      <div className="flex flex-wrap justify-center gap-3">
         {ep.participants.map((name) => (
-          <Image
+          <ParticipantImage
             key={name}
-            src={`/media/peeps/${name}.jpg`}
-            alt={name}
-            width={78}
-            height={78}
-            className="rounded"
-            unoptimized
+            name={name}
+            hoverName={ep.participantHoverSwaps?.[name]}
           />
         ))}
       </div>
 
-      {/* ── Link dump ─────────────────────────────────────────── */}
+      {/* ── Link dump ───────────────────────────────────────────── */}
       {ep.linkDump && ep.linkDump.length > 0 && (
-        <div>
-          <p className="font-semibold mb-1">Link Dump:</p>
-          <ul className="list-none space-y-1">
+        <div className="w-full max-w-lg">
+          <p className="font-semibold text-gray-800 mb-2">Link Dump</p>
+          <ul className="space-y-1">
             {ep.linkDump.map((link, i) =>
               link.href ? (
                 <li key={i}>
                   <a
                     href={link.href}
-                    className="text-blue-700 hover:underline"
+                    className="text-blue-700 hover:underline text-sm"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -111,7 +111,9 @@ export default async function EpisodePage({ params }: Props) {
                   </a>
                 </li>
               ) : (
-                <li key={i}>{link.label}</li>
+                <li key={i} className="text-sm text-gray-600">
+                  {link.label}
+                </li>
               ),
             )}
           </ul>

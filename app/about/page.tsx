@@ -62,24 +62,32 @@ const people = [
 
 export default function AboutPage() {
   return (
-    <div id="people">
-      <h1 className="text-2xl font-bold mb-6">Who is we?</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 w-[700px] max-w-full mx-auto text-center">
+    <>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Who is we?</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {people.map((person) => (
-          <div key={person.name} className="p-1.5">
-            <Image
-              src={person.photo}
-              alt={person.name}
-              width={150}
-              height={150}
-              className="mx-auto mb-2 rounded"
-              unoptimized
-            />
-            <p className="font-bold">{person.name}</p>
-            <p>{person.bio}</p>
+          <div
+            key={person.name}
+            className="flex flex-col items-center text-center bg-gray-50 border border-gray-200 rounded-xl p-4 gap-3"
+          >
+            <div className="w-28 h-28 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-200">
+              <Image
+                src={person.photo}
+                alt={person.name}
+                width={112}
+                height={112}
+                className="object-cover w-full h-full"
+                unoptimized
+              />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">{person.name}</p>
+              <p className="text-sm text-gray-600 mt-1">{person.bio}</p>
+            </div>
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

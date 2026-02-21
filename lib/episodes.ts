@@ -19,6 +19,11 @@ export interface Episode {
   thumb: string;
   /** Participants shown on the episode page (filenames without extension) */
   participants: string[];
+  /**
+   * Maps a participant slug to the alternate participant shown on hover.
+   * Used in ep8 where Glenn's slot was filled by Austin.
+   */
+  participantHoverSwaps?: Record<string, string>;
   /** Audio episode – provide audioFiles */
   audioFiles?: AudioFile[];
   /** Optional legacy SoundCloud link */
@@ -75,6 +80,7 @@ export const episodes: Episode[] = [
     description: "The SamCast game show is back",
     thumb: "/ep8/thumb.jpg",
     participants: ["darragh", "emma", "kevin", "killian", "glenn"],
+    participantHoverSwaps: { glenn: "austin" },
     audioFiles: [
       { src: "/ep8/samcast8.ogg", type: "audio/ogg" },
       { src: "/ep8/samcast8.mp3", type: "audio/mpeg" },
