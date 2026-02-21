@@ -33,3 +33,27 @@ body {
   height: 100%;
   border: 0;
 }
+
+/* ── Animated soundwave bars (used in SiteHeader) ──────────────── */
+@keyframes soundbar {
+  0%, 100% { height: 4px;  }
+  50%       { height: 18px; }
+}
+
+/* Base class shared by every bar */
+.soundbar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 9999px;
+  background-color: rgb(255 255 255 / 0.65);
+  animation: soundbar 0.9s ease-in-out infinite;
+  animation-fill-mode: both;
+}
+
+/* Staggered delays – symmetric so bars form a live waveform */
+.soundbar:nth-child(1) { animation-delay: 0s;    }
+.soundbar:nth-child(2) { animation-delay: 0.18s; }
+.soundbar:nth-child(3) { animation-delay: 0.36s; }
+.soundbar:nth-child(4) { animation-delay: 0.18s; }
+.soundbar:nth-child(5) { animation-delay: 0s;    }
+

@@ -8,9 +8,9 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="bg-[#1e293b] text-white shadow-lg">
+    <header className="bg-[#1e293b] text-white shadow-lg border-t-2 border-t-indigo-500">
       <div className="max-w-4xl mx-auto px-4">
-        {/* ── Top bar: logo + title + hamburger ──────────────────── */}
+        {/* ── Top bar: logo + title + bars + hamburger ────────────── */}
         <div className="flex items-center justify-between py-3">
           {/* Brand */}
           <Link
@@ -32,6 +32,17 @@ export default function SiteHeader() {
             <span className="text-xl font-bold tracking-tight hidden sm:block">
               The SamCast
             </span>
+            {/* Animated sound bars — decorative, desktop only */}
+            <div
+              className="hidden sm:flex items-end gap-0.5 h-5 self-center"
+              aria-hidden="true"
+            >
+              <span className="soundbar" />
+              <span className="soundbar" />
+              <span className="soundbar" />
+              <span className="soundbar" />
+              <span className="soundbar" />
+            </div>
           </Link>
 
           {/* Desktop nav links */}
