@@ -1,0 +1,82 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CI/CD: Build → Export → Deploy to S3 → Invalidate CloudFront
+#
+# Authentication uses OIDC (no long-lived AWS access keys stored in GitHub).
+# Required GitHub secrets / environment variables:
+#   AWS_ACCOUNT_ID        – your 12-digit AWS account ID
+#   AWS_REGION            – e.g. eu-west-1
+#   AWS_ROLE_NAME         – IAM role created for this workflow (see iam-policy.json)
+#   S3_BUCKET             – e.g. samcast-site-prod
+#   CLOUDFRONT_DIST_ID    – CloudFront distribution ID (optional; skip if no CDN)
+#   NEXT_PUBLIC_SITE_URL  – canonical URL, e.g. https://samcast.example.com
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write   # required for OIDC token exchange
+  contents: read
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout source
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js (matches engine used locally)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      # 3. Install dependencies (clean install for CI)
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build and generate static export
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+
+      # 5. Configure AWS credentials via OIDC (no stored keys)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 6. Sync the /out directory to S3
+      #    --delete removes files in S3 that no longer exist locally
+      - name: Sync to S3
+        run: |
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET }}/ \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "*.html" \
+            --exclude "*.txt"
+          # HTML and txt files get shorter cache so stale pages expire quickly
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET }}/ \
+            --delete \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --include "*.html" \
+            --include "*.txt"
+
+      # 7. Invalidate the CloudFront cache so visitors see the new build
+      #    Skip this step if you are not using CloudFront
+      - name: Invalidate CloudFront
+        if: ${{ secrets.CLOUDFRONT_DIST_ID != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+            --paths "/*"

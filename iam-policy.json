@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "Attach this policy to the IAM role assumed by the GitHub Actions OIDC provider.",
+    "Replace BUCKET_NAME with your actual S3 bucket name.",
+    "Replace CLOUDFRONT_DIST_ID with your CloudFront distribution ID (or remove that statement if unused).",
+    "",
+    "Trust relationship for the role (replace ORG/REPO and BRANCH as needed):",
+    "  Principal: { Federated: arn:aws:iam::ACCOUNT:oidc-provider/token.actions.githubusercontent.com }",
+    "  Condition: StringLike: token.actions.githubusercontent.com:sub: repo:ORG/REPO:ref:refs/heads/main"
+  ],
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3ListBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::BUCKET_NAME"
+    },
+    {
+      "Sid": "S3ReadWrite",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::BUCKET_NAME/*"
+    },
+    {
+      "Sid": "CloudFrontInvalidate",
+      "Effect": "Allow",
+      "Action": ["cloudfront:CreateInvalidation"],
+      "Resource": "arn:aws:cloudfront::ACCOUNT_ID:distribution/CLOUDFRONT_DIST_ID"
+    }
+  ]
+}
