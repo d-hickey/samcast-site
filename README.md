@@ -100,12 +100,13 @@ Add these in **Settings → Secrets → Actions**:
 
 | Secret | Example |
 |--------|---------|
-| `AWS_ACCOUNT_ID` | `123456789012` |
+| `AWS_ACCESS_KEY_ID` | `your AWS access key ID` |
+| `AWS_SECRET_ACCESS_KEY` | `your AWS secret access key` |
 | `AWS_REGION` | `eu-west-1` |
 | `AWS_ROLE_NAME` | `samcast-github-deploy` |
 | `S3_BUCKET` | `samcast-site-prod` |
 | `CLOUDFRONT_DIST_ID` | `EXXXXXXXXX` |
-| `NEXT_PUBLIC_SITE_URL` | `https://samcast.example.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://samcast.org` |
 
 Push to `main` to trigger a deployment.
 
