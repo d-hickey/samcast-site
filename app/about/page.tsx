@@ -53,11 +53,6 @@ const people = [
     photo: "/media/peeps/austin.jpg",
     bio: "Resident extrovert and loud boy, Austin's favourite activity is to touch ocean.",
   },
-  {
-    name: "Jonathan Hennessey Doyle",
-    photo: "/media/peeps/jhd.jpg",
-    bio: "An enigmatic person. JHD can often be found hiding within a skeleton friend.",
-  },
 ];
 
 export default function AboutPage() {
