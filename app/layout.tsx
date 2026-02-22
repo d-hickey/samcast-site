@@ -5,7 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 export const metadata: Metadata = {
   // metadataBase is used to resolve relative OpenGraph image URLs
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://samcast.example.com",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://samcast.org",
   ),
   title: {
     default: "The SamCast",
